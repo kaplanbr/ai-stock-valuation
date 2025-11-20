@@ -35,6 +35,7 @@ Thumbs.db
 # Keep folder, ignore all xlsx files inside
 data/valuations/*
 !data/valuations/.gitkeep
+!data/valuations/ai-summaries/.gitkeep
 
 
 
