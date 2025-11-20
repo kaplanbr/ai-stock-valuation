@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+requests
+yfinance
+openpyxl
+google-generativeai
+openai
+xlwings
+python-dotenv

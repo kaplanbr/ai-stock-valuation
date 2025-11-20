@@ -1,0 +1,80 @@
+# -----------------------
+# Python bytecode & cache
+# -----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# -----------------------
+# Virtual environments
+# -----------------------
+env/
+venv/
+.venv/
+*.env
+
+# -----------------------
+# OS files
+# -----------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------
+# IDE / Editor
+# -----------------------
+.vscode/
+.settings/
+.idea/
+
+# -----------------------
+# Logs
+# -----------------------
+*.log
+
+# -----------------------
+# Keep folder, ignore all xlsx files inside
+data/valuations/*
+!data/valuations/.gitkeep
+
+
+
+# Except template (keep this!)
+!data/format.xlsx
+
+# -----------------------
+# Secrets
+# -----------------------
+config.py
+config.toml
+*.key
+*.pem
+*.toml
+
+# Streamlit local config
+.streamlit/
+.streamlit/secrets.toml
+
+# -----------------------
+# Build / Distribution
+# -----------------------
+build/
+dist/
+*.egg-info/
+
+# -----------------------
+# Cache & temp
+# -----------------------
+*.tmp
+*.temp
+*.bak
+temp/
+tmp/
+
+
+# -----------------------
+# Irrelevant codes
+# -----------------------
+src/fin_data_av.py
+src/fin_data_fmp.py
+gcp_commands.txt
+todo.txt
