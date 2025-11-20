@@ -206,16 +206,6 @@ if st.session_state.analysis_done:
     
     st.divider()
 
-    # 1. Top Level Metrics
-    st.subheader("🎯 Valuation Targets")
-    def show_metrics(preds):
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Current Price", preds.get("current_price", "N/A"))
-        m2.metric("Mid Target", preds.get("lower_prediction", "N/A"))
-        m3.metric("Upper Target", preds.get("upper_prediction", "N/A"))
-    
-    show_metrics(st.session_state.predictions)
-    st.write("")
 
     # Load and prepare data for Fundamentals & Scenarios
     if os.path.exists(st.session_state.ai_excel_path):
@@ -253,6 +243,146 @@ if st.session_state.analysis_done:
             df_scenarios["Metric"].astype(str).str.strip() != ""
         ]
 
+        # ---- Fundamentals değerlerini çek ----
+        def get_fund(metric):
+            try:
+                val = df_fund_display.loc[
+                    df_fund_display["Metric"] == metric, "Qtr Value (000s)"
+                ].iloc[0]
+                return float(val)
+            except IndexError:
+                return None
+
+        share_price   = get_fund("Share Price")
+        shares_out    = get_fund("Shares Outstanding")
+        revenue_qtr   = get_fund("Revenue (Qtr)")
+        cogs          = get_fund("COGS")
+        opex          = get_fund("OPEX")
+        op_profit     = get_fund("Operating Profit")
+        cash          = get_fund("Cash")
+        debt          = get_fund("Debt")
+
+        # ---- Python ile temel türevler ----
+        market_cap       = share_price * shares_out if share_price and shares_out else None
+        gross_profit     = revenue_qtr - cogs if revenue_qtr is not None and cogs is not None else None
+        gross_margin     = (gross_profit / revenue_qtr) if revenue_qtr else None
+        operating_margin = (op_profit / revenue_qtr) if revenue_qtr else None
+        net_cash         = (cash - debt) if cash is not None and debt is not None else None
+
+        # Fundamentals tablosunu override et
+        fund_overrides = {
+            "Market Cap (auto)": market_cap,
+            "Gross Profit": gross_profit,
+            "Gross Margin": gross_margin,
+            "Operating Margin": operating_margin,
+            "Net Cash (auto)": net_cash,
+        }
+        for metric, val in fund_overrides.items():
+            if val is not None:
+                mask = df_fund_display["Metric"] == metric
+                if mask.any():
+                    df_fund_display.loc[mask, "Qtr Value (000s)"] = val
+
+        # ---- Scenarios değerlerini çek ----
+        def get_scen(metric, col):
+            try:
+                val = df_scenarios.loc[df_scenarios["Metric"] == metric, col].iloc[0]
+                return float(val)
+            except IndexError:
+                return None
+
+        cagr_mid   = get_scen("Expected Revenue CAGR (5y)", "Mid Scenario")
+        cagr_good  = get_scen("Expected Revenue CAGR (5y)", "Good Scenario")
+
+        op_margin_mid   = get_scen("E Operated Margin", "Mid Scenario")
+        op_margin_good  = get_scen("E Operated Margin", "Good Scenario")
+
+        dil_mid   = get_scen("Expected Dilution (5y)", "Mid Scenario")
+        dil_good  = get_scen("Expected Dilution (5y)", "Good Scenario")
+
+        tax_mid   = get_scen("Tax rate", "Mid Scenario") or 0.21
+        tax_good  = get_scen("Tax rate", "Good Scenario") or tax_mid
+
+        mult_mid  = get_scen("Long Term Earning Multiple", "Mid Scenario") or 25
+        mult_good = get_scen("Long Term Earning Multiple", "Good Scenario") or mult_mid
+
+        cagr_mid   = get_scen("Expected Revenue CAGR (5y)", "Mid Scenario")
+        cagr_good  = get_scen("Expected Revenue CAGR (5y)", "Good Scenario")
+
+        op_margin_mid   = get_scen("E Operated Margin", "Mid Scenario")
+        op_margin_good  = get_scen("E Operated Margin", "Good Scenario")
+
+        dil_mid   = get_scen("Expected Dilution (5y)", "Mid Scenario")
+        dil_good  = get_scen("Expected Dilution (5y)", "Good Scenario")
+
+        tax_mid   = get_scen("Tax rate", "Mid Scenario") or 0.21
+        tax_good  = get_scen("Tax rate", "Good Scenario") or tax_mid
+
+        mult_mid  = get_scen("Long Term Earning Multiple", "Mid Scenario") or 25
+        mult_good = get_scen("Long Term Earning Multiple", "Good Scenario") or mult_mid
+
+        # ---- senaryo bazlı hesaplama fonksiyonu ----
+        def compute_scenario_targets(cagr, op_margin, tax_rate, dilution, multiple):
+            if revenue_qtr is None or shares_out is None or cagr is None or op_margin is None:
+                return None, None, None
+
+            revenue_year0 = revenue_qtr * 4  # Q'dan yıla
+            rev_5y = revenue_year0 * (1 + cagr) ** 5
+            ebit_5y = rev_5y * op_margin
+            net_5y = ebit_5y * (1 - tax_rate)
+
+            # basit P/E tarzı değerleme
+            equity_5y = net_5y * multiple
+
+            shares_5y = shares_out * (1 + (dilution or 0.0))
+            price_5y = equity_5y / shares_5y if shares_5y else None
+
+            return rev_5y, ebit_5y, price_5y
+
+        e_rev_mid, e_ebit_mid, price_mid = compute_scenario_targets(
+            cagr_mid, op_margin_mid, tax_mid, dil_mid, mult_mid
+        )
+        e_rev_good, e_ebit_good, price_good = compute_scenario_targets(
+            cagr_good, op_margin_good, tax_good, dil_good, mult_good
+        )
+
+        # Scenarios tablosunda E Revenue / E EBITDA satırlarını override et
+        scen_override_rows = {
+            "E Revenue": (e_rev_mid, e_rev_good),
+            "E EBITDA": (e_ebit_mid, e_ebit_good),
+        }
+        for metric, (mid_val, good_val) in scen_override_rows.items():
+            mask = df_scenarios["Metric"] == metric
+            if mask.any():
+                if mid_val is not None:
+                    df_scenarios.loc[mask, "Mid Scenario"] = mid_val
+                if good_val is not None:
+                    df_scenarios.loc[mask, "Good Scenario"] = good_val
+
+        # ---- Valuation Targets prediction ----
+        if share_price is not None and price_mid is not None and price_good is not None:
+            st.session_state.predictions = {
+                "ticker": st.session_state.ticker,
+                "current_price": f"{share_price:.2f}",
+                "lower_prediction": f"{price_mid:.2f}",
+                "upper_prediction": f"{price_good:.2f}",
+            }
+
+        # 1. Top Level Metrics (Python hesaplarından)
+        st.subheader("🎯 Valuation Targets")
+
+        def show_metrics(preds):
+            m1, m2, m3 = st.columns(3)
+            m1.metric(
+                "Current Price", preds.get("current_price", "N/A")
+            )
+            m2.metric("Mid Target", preds.get("lower_prediction", "N/A"))
+            m3.metric("Upper Target", preds.get("upper_prediction", "N/A"))
+
+        show_metrics(st.session_state.predictions)
+        st.write("")
+
+        
         # Fundamentals (25%) | Scenarios (25%) | AI Summary (50%)
         col_fund, col_scen, col_text = st.columns([1, 1, 2])
 
