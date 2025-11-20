@@ -337,6 +337,8 @@ if st.session_state.analysis_done:
             shares_5y = shares_out * (1 + (dilution or 0.0))
             price_5y = equity_5y / shares_5y if shares_5y else None
 
+            price_5y /= (1.05 ** 5)  # 5% iskonto ile bugüne indirgeme
+
             return rev_5y, ebit_5y, price_5y
 
         e_rev_mid, e_ebit_mid, price_mid = compute_scenario_targets(
@@ -350,6 +352,7 @@ if st.session_state.analysis_done:
         scen_override_rows = {
             "E Revenue": (e_rev_mid, e_rev_good),
             "E EBITDA": (e_ebit_mid, e_ebit_good),
+            "Predicted Share Price (5 yr)": (price_mid, price_good),
         }
         for metric, (mid_val, good_val) in scen_override_rows.items():
             mask = df_scenarios["Metric"] == metric
@@ -382,7 +385,7 @@ if st.session_state.analysis_done:
         show_metrics(st.session_state.predictions)
         st.write("")
 
-        
+
         # Fundamentals (25%) | Scenarios (25%) | AI Summary (50%)
         col_fund, col_scen, col_text = st.columns([1, 1, 2])
 
