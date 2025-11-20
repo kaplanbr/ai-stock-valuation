@@ -52,14 +52,6 @@ stock_val/
 
 ---
 
-## CLI Usage
-
-```
-python main.py AAPL True True
-```
-
----
-
 ## Run Streamlit App
 
 ```
