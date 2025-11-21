@@ -326,7 +326,7 @@ if st.session_state.analysis_done:
             shares_5y = shares_out * (1 + (dilution or 0.0))
             price_5y = equity_5y / shares_5y if shares_5y else None
 
-            price_5y_disc = price_5y*((1.05 ** 5))  # 5% iskonto ile bugüne indirgeme
+            price_5y_disc = price_5y / ((1.05 ** 5))  # 5% iskonto ile bugüne indirgeme
 
             return rev_5y, ebit_5y, earning_5y, shares_5y, price_5y, price_5y_disc
 
