@@ -351,8 +351,9 @@ if st.session_state.analysis_done:
             "Predicted Share Price (5 yr)": (price_mid, price_good),
             "Predicted Share Price": (price_mid_disc, price_good_disc),
         }
+        scen_metric_series = df_scenarios["Metric"].astype(str)
         for metric, (mid_val, good_val) in scen_override_rows.items():
-            mask = df_scenarios["Metric"] == metric
+            mask = scen_metric_series.str.contains(metric, na=False)
             if mask.any():
                 if mid_val is not None:
                     df_scenarios.loc[mask, "Mid Scenario"] = mid_val
