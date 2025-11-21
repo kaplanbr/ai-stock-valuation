@@ -22,6 +22,7 @@ except ImportError as e:
 # Page Config
 st.set_page_config(page_title="AI Stock Valuation", layout="wide")
 
+
 # --- Base CSS for padding etc. (colors handled via Styler) ---
 st.markdown("""
 <style>
@@ -348,7 +349,7 @@ if st.session_state.analysis_done:
             "E Shares Outstanding": (shares_mid, shares_good),
             "Expected EPS": (eps_mid, eps_good),
             "Predicted Share Price (5 yr)": (price_mid, price_good),
-            "Predicted Share Price Discounted": (price_mid_disc, price_good_disc),
+            "Predicted Share Price Disc": (price_mid_disc, price_good_disc),
         }
         scen_metric_series = df_scenarios["Metric"].astype(str)
         for metric, (mid_val, good_val) in scen_override_rows.items():
@@ -413,3 +414,15 @@ if st.session_state.analysis_done:
 
 elif not submit_btn and not st.session_state.analysis_done:
     st.info("👈 Enter a ticker above to start.")
+
+
+# --- Footer: Developed by Kaplanbr ---
+st.markdown(
+    """
+    <hr style="margin-top:2rem; margin-bottom:0.5rem;">
+    <div style="text-align:left; font-size:1.2rem; color: #888;">
+        Developed by <a href="https://github.com/kaplanbr" target="_blank">Kaplanbr</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
