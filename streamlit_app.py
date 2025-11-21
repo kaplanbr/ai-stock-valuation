@@ -348,7 +348,7 @@ if st.session_state.analysis_done:
             "Earning": (earning_mid, earning_good),
             "E Shares Outstanding": (shares_mid, shares_good),
             "Expected EPS": (eps_mid, eps_good),
-            "Predicted Share Price (5 yr)": (price_mid, price_good),
+            "Predicted Share Price 5 yr": (price_mid, price_good),
             "Predicted Share Price Disc": (price_mid_disc, price_good_disc),
         }
         scen_metric_series = df_scenarios["Metric"].astype(str)
