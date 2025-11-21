@@ -86,6 +86,7 @@ def styled_table(df: pd.DataFrame, numeric_cols=None):
                 ("padding", "0.45rem 0.75rem"),
                 ("border", "1px solid #e5e7eb"),
                 ("font-size", "0.9rem"),
+                 ("color", "#111827")
             ],
         },
         {
