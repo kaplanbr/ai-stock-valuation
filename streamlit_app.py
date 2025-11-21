@@ -242,8 +242,7 @@ if st.session_state.analysis_done:
         df_scenarios = df_scenarios[
             df_scenarios["Metric"].astype(str).str.strip() != ""
         ]
-        print(df_scenarios)
-        print(df_fund_display)
+
         # ---- Fundamentals değerlerini çek ----
         def get_fund(metric):
             try:
