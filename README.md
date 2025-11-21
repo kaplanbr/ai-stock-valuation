@@ -28,10 +28,9 @@ Supports:
 ### 3. AI Valuation Summary
 - Uses the latest quarterly earnings context  
 - Generates a readable investment summary  
-- Optionally writes results back to the valuation workbook
+
 
 ### 4. Streamlit Web Application
-- Clean UI  
 - Displays fundamentals + AI summary  
 - Allows downloading the generated valuation Excel
 
