@@ -1,3 +1,9 @@
+## Try Live App
+
+You can use the live version here:
+
+**https://ai-stock-valuation.streamlit.app/**
+
 # Stock Valuation App
 
 This project provides a complete automated stock valuation pipeline including:
@@ -9,11 +15,6 @@ This project provides a complete automated stock valuation pipeline including:
 - AI-generated valuation summary  
 - Streamlit web interface to run valuations interactively
 
-## Try Live App
-
-You can use the live version here:
-
-**https://ai-stock-valuation.streamlit.app/**
 ---
 
 ## Features
