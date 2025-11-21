@@ -149,7 +149,7 @@ if submit_btn and ticker_input:
     
     try:
         # 1. Fetch Data
-        status_container.write(f"📊 Fetching financial data for {ticker_input}...")
+        status_container.write(f"📊 Fetching latest quarter financial data for {ticker_input}...")
         value_stock(ticker_input)
         
         base_excel_path = os.path.join("data", "valuations", f"{ticker_input}.xlsx")
@@ -351,9 +351,8 @@ if st.session_state.analysis_done:
             "Predicted Share Price 5 yr": (price_mid, price_good),
             "Predicted Share Price Disc": (price_mid_disc, price_good_disc),
         }
-        scen_metric_series = df_scenarios["Metric"].astype(str)
         for metric, (mid_val, good_val) in scen_override_rows.items():
-            mask = scen_metric_series.str.contains(metric, na=False)
+            mask = df_scenarios["Metric"] == metric
             if mask.any():
                 if mid_val is not None:
                     df_scenarios.loc[mask, "Mid Scenario"] = mid_val
