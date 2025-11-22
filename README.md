@@ -1,4 +1,4 @@
-## Try Live App
+# Try Live App
 
 You can use the live version here:
 
