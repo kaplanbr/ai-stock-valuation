@@ -2,6 +2,8 @@
 
 You can use the live version here:
 
+![App Screenshot](./assets/example_usage.PNG)
+
 **https://ai-stockv.streamlit.app/**
 
 # Stock Valuation App
