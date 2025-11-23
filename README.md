@@ -1,6 +1,4 @@
-# Try Live App
-
-You can use the live version here:
+You can use the try live app here:
 
 [![App Screenshot](./assets/example_usage.png)](https://ai-stockv.streamlit.app/)
 **https://ai-stockv.streamlit.app/**
