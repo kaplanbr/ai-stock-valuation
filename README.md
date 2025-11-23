@@ -17,14 +17,13 @@ This project provides a complete automated stock valuation pipeline including:
 ## Features
 
 ### 1. Financial Data Retrieval
-Supports:
-- Yahoo Finance
+- Latest quarterly financial statesments from Yahoo Finance
 
 ### 2. Excel-Based Valuation Model
 - Populates fundamentals, scenarios, and fair-value predictions  
 
 ### 3. AI Valuation Summary
-- Uses the latest quarterly earnings context  
+- Uses quarterly earnings and balance sheet as context  
 - Generates a readable investment summary and valuation suggestions  
 
 
@@ -38,6 +37,7 @@ Supports:
 
 ```
 stock_val/
+  assets/
   data/
     format.xlsx
     valuations/
