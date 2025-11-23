@@ -3,8 +3,6 @@ You can use the try live app here:
 [![App Screenshot](./assets/example_usage.png)](https://ai-stockv.streamlit.app/)
 **https://ai-stockv.streamlit.app/**
 
-# Stock Valuation App
-
 This project provides a complete automated stock valuation pipeline including:
 
 - Financial data retrieval from the latest income statement and balance sheet  
