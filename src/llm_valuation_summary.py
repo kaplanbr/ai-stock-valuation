@@ -112,10 +112,14 @@ SCENARIOS:
 
 Write a Markdown report with:
 
-### 1. Company snapshot (use your own reasoning or web sources, do not just repeat the fundamentals):
-### 2. Pros (use your own reasoning or web sources, do not just repeat the fundamentals):
-### 3. Cons (use your own reasoning or web sources, do not just repeat the fundamentals):
-### 4. Scenario Suggestions (Suggest two values for case mid and good case for each input, very briefly -one sentence- explain why.)
+### 1. Company snapshot 
+ (use your own reasoning or web sources, do not just repeat the fundamentals):
+### 2. Pros 
+ (use your own reasoning or web sources, do not just repeat the fundamentals):
+### 3. Cons 
+ (use your own reasoning or web sources, do not just repeat the fundamentals):
+### 4. Scenario Suggestions 
+ (Suggest two values for case mid and good case for each input, very briefly -one sentence- explain why.)
 ### Include the suggested two values in your explanation also the same in json file at the end. 
 scenario inputs are these:
 - Expected Revenue CAGR (5y) (expected_rev_cagr_5y)
