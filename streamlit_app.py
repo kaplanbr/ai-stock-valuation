@@ -314,7 +314,7 @@ if st.session_state.analysis_done:
 
 
         # ---- senaryo bazlı hesaplama fonksiyonu ----
-        def compute_scenario_targets(cagr, op_margin, tax_rate, dilution, multiple):
+        def compute_scenario_targets(ticker, cagr, op_margin, tax_rate, dilution, multiple):
             if revenue_qtr is None or shares_out is None or cagr is None or op_margin is None:
                 return None, None, None
 
@@ -329,15 +329,20 @@ if st.session_state.analysis_done:
             shares_5y = shares_out * (1 + (dilution or 0.0))
             price_5y = equity_5y / shares_5y if shares_5y else None
 
-            price_5y_disc = price_5y/((1.05 ** 5))  # 5% iskonto ile bugüne indirgeme
+            if ticker_input[-3:] == ".IS":
+                disc_rate = 0.25  # Türkiye için daha yüksek iskonto
+            else:
+                disc_rate = 0.05  # Standart 5% iskonto            
 
-            return rev_5y, ebit_5y, earning_5y, shares_5y, price_5y, price_5y_disc
+            price_5y_disc = price_5y/(((1+disc_rate) ** 5))  # iskonto ile bugüne indirgeme
 
-        e_rev_mid, e_ebit_mid, earning_mid,shares_mid, price_mid, price_mid_disc = compute_scenario_targets(
-            cagr_mid, op_margin_mid, tax_mid, dil_mid, mult_mid
+            return rev_5y, ebit_5y, earning_5y, shares_5y, price_5y, price_5y_disc, disc_rate
+
+        e_rev_mid, e_ebit_mid, earning_mid,shares_mid, price_mid, price_mid_disc,disc_rate = compute_scenario_targets(
+            ticker_input,cagr_mid, op_margin_mid, tax_mid, dil_mid, mult_mid
         )
-        e_rev_good, e_ebit_good,earning_good,shares_good, price_good, price_good_disc = compute_scenario_targets(
-            cagr_good, op_margin_good, tax_good, dil_good, mult_good
+        e_rev_good, e_ebit_good,earning_good,shares_good, price_good, price_good_disc, disc_rate = compute_scenario_targets(
+            ticker_input,cagr_good, op_margin_good, tax_good, dil_good, mult_good
         )
 
         # EPS hesapla
@@ -353,6 +358,7 @@ if st.session_state.analysis_done:
             "Expected EPS": (eps_mid, eps_good),
             "Predicted Share Price 5 yr": (price_mid, price_good),
             "Predicted Share Price Disc": (price_mid_disc, price_good_disc),
+            "Discounted rate": (disc_rate, disc_rate),
         }
         for metric, (mid_val, good_val) in scen_override_rows.items():
             mask = df_scenarios["Metric"] == metric
